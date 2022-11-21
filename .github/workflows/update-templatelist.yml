@@ -1,0 +1,23 @@
+name: update-templatelist
+
+on: 
+  push:
+    paths:
+      - 'templates/**'
+
+jobs:
+  updateList: 
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v2 # Checkout repo
+      - name: List templates
+        shell: pwsh
+        run: Get-ChildItem -Path templates -Directory -Force | select -ExpandProperty Name | Out-File -FilePath ./assets/templatelist.txt 
+      - name: Commit report
+        run: |
+          git config --global user.name 'Bot'
+          git config --global user.email 'fordosa90+bot@users.noreply.github.com'
+          git add *
+          git commit -m "Bit - update template list"
+          git push
